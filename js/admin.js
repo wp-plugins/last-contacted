@@ -21,10 +21,14 @@ jQuery(document).ready(function($) {
 		effect: 'toggle',
 		predelay: 250,
 		relative: true,
-		position: 'bottom right',
-		offset: [-30, -300],
+		position: 'bottom center',
+		offset: [-30, 20], // If changing the -30 vertical offset, change it also in onShow handler
 		tipClass: 'tooltip',
 		onBeforeShow: function(event, position) {
+			if ( this.getTrigger().data('over-span') === true ) {
+				event.preventDefault();
+				return;
+			}
 			var contact = this.getTrigger().closest('.lc_contact');
 			// Ensure the contact form is shown when the contact's details are expanded
 			contact.find('.lc_new_contact_form').show();
@@ -32,10 +36,25 @@ jQuery(document).ready(function($) {
 			if ( contact.find('a.chosen_method').size() == 0 )
 				contact.find('a.lc_default_contact_method').click();
 		},
+		// The onShow handler exists solely to vertically adjust a tooltip for trigger objects taller than normal
+		onShow: function(event, position) {
+			var trigger_top = Math.round(this.getTrigger().offset().top);
+			var tip_top     = Math.round(this.getTip().css('top').slice(0,-2));
+			var diff = trigger_top - tip_top;
+			if ( diff - 30 != 0 ) // The 30 is the original offset set above
+				this.getTip().css('top',tip_top - diff - 2);
+		},
 		onBeforeHide: function(event, position) {
 			if ( $( '.ui-datepicker-calendar').is(':visible') )
 				event.preventDefault();
 		}
+	});
+
+	// Prevent contact popup from appearing if hovering over last contact date
+	$( '.lc_contact h5 span' ).mouseenter(function(){
+		$(this).parent().data('over-span',true);
+	}).mouseleave(function() {
+		$(this).parent().data('over-span',false);
 	});
 
 	//

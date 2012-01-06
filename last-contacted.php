@@ -2,18 +2,18 @@
 /**
  * @package Last_Contacted
  * @author Scott Reilly
- * @version 0.9.12
+ * @version 0.9.13
  */
 /*
 Plugin Name: Last Contacted
-Version: 0.9.12
+Version: 0.9.13
 Plugin URI: http://coffee2code.com/wp-plugins/last-contacted/
 Author: Scott Reilly
 Author URI: http://coffee2code.com/
 Text Domain: last-contacted
 Description: Easily keep track of the last time you interacted with your contacts.
 
-Compatible with WordPress 3.1+, 3.2+, 3.3+
+Compatible with WordPress 3.3+
 */
 
 /*
@@ -82,7 +82,7 @@ class c2c_LastContacted {
 	 */
 	public static $enable_admin_page  = true;
 
-	private static $public_post_types = false; // Currently only used to expose post types for debugging
+	public static $public_post_types = true; // Currently only used to expose post types for debugging
 
 	private static $widget_id  = 'c2c_LastContacted';
 
@@ -96,7 +96,7 @@ class c2c_LastContacted {
 	 * @since 0.9.8
 	 */
 	public static function version() {
-		return '0.9.12';
+		return '0.9.13';
 	}
 
 	/**

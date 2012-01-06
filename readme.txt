@@ -2,10 +2,10 @@
 Contributors: coffee2code
 Donate link: http://coffee2code.com/donate
 Tags: admin, dashboard, contacts, google, coffee2code
-Requires at least: 3.1
+Requires at least: 3.3
 Tested up to: 3.3.1
-Stable tag: 0.9.12
-Version: 0.9.12
+Stable tag: 0.9.13
+Version: 0.9.13
 
 Easily keep track of the last time you interacted with your contacts.
 
@@ -58,6 +58,24 @@ No. This plugin provides an interface for managing when you contacted your conta
 
 
 == Changelog ==
+
+= 0.9.13 =
+* Shrink popup trigger zone so as not to encompass right 1/4 of group's contacts listing (facilitates scrolling)
+* Don't show contact form by default on contact popup
+* Add hover zone on bottom of contact popup to trigger display of contact form
+* Add link to hide/close contact form button when it is expanded
+* ...(once opened, contact form stays displayed until explicitly hidden or form is submitted)
+* Hide contact form after newly-contacted submission
+* Move 'Hide' contact button out from under avatar and to far right of contact's name
+* Don't show hide contact button by default on contact popup
+* Hovering over contact name reveals hide button
+* Expose CPTs (temporarily?)
+* Add icons for CPT menus
+* Fix contact popup vertical positioning for contacts with names that wrap
+* Use WP-bundled jQuery UI and effects scripts
+* Define min-width for contact popups
+* Wrap note for latest contact in popup with `<em>`
+* Drop support for WP 3.1+, 3.2+
 
 = 0.9.12 =
 * Add to WordPress plugin repository
@@ -179,6 +197,9 @@ No. This plugin provides an interface for managing when you contacted your conta
 
 == Changelog ==
 
+= 0.9.13 =
+* Recommended update: smaller contact popup hover zone; don't show form by default; move 'hide contact' button; dropped support for WP 3.2
+
 = 0.9.12 =
 * Initial public availability (still an alpha release)
 
@@ -189,7 +210,7 @@ No. This plugin provides an interface for managing when you contacted your conta
 * Properly report failed OAuth authentication
 * Extract import stuff from LastContacted and put into dedicated class
 * Remove non-sprited versions of sprited icons
-* Remove markup and JS related to "hide form"
+* Dashboard widget: reinstate hide contact button for dashboard
 
 = ENHANCEMENTS =
 * Prefix all CSS classes with "lc_"

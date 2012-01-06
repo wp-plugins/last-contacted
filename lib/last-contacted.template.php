@@ -56,7 +56,7 @@ function lc_last_contacted_full( $contact = null ) {
 	echo "Last contacted via <strong>$Method</strong> on <strong>$date</strong>.<br />";
 	if ( ! empty( $latest_contact->comment_content ) ) {
 		echo "Note: ";
-		echo esc_html( $latest_contact->comment_content );
+		echo '<em>' . esc_html( $latest_contact->comment_content ) . '</em>';
 	}
 	echo '</div>';
 }

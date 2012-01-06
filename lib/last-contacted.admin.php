@@ -23,16 +23,20 @@ class c2c_LastContactedAdmin {
 		add_filter( 'c2c_google_contacts-base_query_args', array( __CLASS__, 'filter_google_contacts_oauth_query' ) );
 		add_filter( 'c2c_google_contacts-base_admin_path', array( __CLASS__, 'filter_google_contacts_admin_page' ) );
 
+		// Register and enqueue global admin styles
+		add_action( 'admin_init',                          array( __CLASS__, 'register_styles' ) );
+		if ( c2c_LastContacted::$public_post_types )
+			add_action( 'admin_print_styles',              array( __CLASS__, 'enqueue_general_css' ) );
+
 		// Do plugin page specific things
 		$pages = apply_filters( 'last_contacted_admin_pages', array( __CLASS__, __CLASS__ . '_import' ) );
 		if ( basename( $pagenow, '.php' ) == 'admin' && isset( $_REQUEST['page'] ) && in_array( $_REQUEST['page'], $pages ) ) {
 			// Maybe import contact data
-			add_action( 'admin_init',                    array( __CLASS__, 'maybe_import' ) );
+			add_action( 'admin_init',                      array( __CLASS__, 'maybe_import' ) );
 			// Enqueues JS for admin page
-			add_action( 'admin_enqueue_scripts',         array( __CLASS__, 'enqueue_admin_js' ) );
+			add_action( 'admin_enqueue_scripts',           array( __CLASS__, 'enqueue_admin_js' ) );
 			// Register and enqueue styles for admin page
-			add_action( 'admin_init',                    array( __CLASS__, 'register_styles' ) );
-			add_action( 'admin_print_styles',            array( __CLASS__, 'enqueue_admin_css' ) );
+			add_action( 'admin_print_styles',              array( __CLASS__, 'enqueue_admin_css' ) );
 		}
 	}
 
@@ -41,11 +45,14 @@ class c2c_LastContactedAdmin {
 	 */
 	public static function enqueue_admin_js() {
 		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js', array(), '1.8.16', true );
+//		wp_enqueue_script( 'jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js', array(), '1.8.16', true );
+		wp_enqueue_script( 'jquery-ui-core' );
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'jquery-effects-highlight' );
 		wp_enqueue_script( 'jquery-tooltip',    c2c_LastContacted::get_javascript_url( 'jquery.tools.min.js' ), array( 'jquery' ), '1.2.6', true );
 		wp_enqueue_script( 'jquery-scrollto',   c2c_LastContacted::get_javascript_url( 'jquery.scrollTo-min.js' ), array( 'jquery' ), '1.2.6', true );
-		wp_enqueue_script( 'c2c_LastContacted', c2c_LastContacted::get_javascript_url( 'common.js' ), array( 'jquery', 'jquery-ui' ), '0.1', true );
-		wp_enqueue_script( self::$class_id,     c2c_LastContacted::get_javascript_url( 'admin.js' ), array( 'jquery', 'jquery-ui', 'jquery-tooltip', 'jquery-scrollto', 'c2c_LastContacted' ), '0.1', true );
+		wp_enqueue_script( 'c2c_LastContacted', c2c_LastContacted::get_javascript_url( 'common.js' ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker', 'jquery-effects-highlight' ), c2c_LastContacted::version(), true );
+		wp_enqueue_script( self::$class_id,     c2c_LastContacted::get_javascript_url( 'admin.js' ), array( 'jquery-tooltip', 'jquery-scrollto', 'c2c_LastContacted' ), c2c_LastContacted::version(), true );
 		c2c_LastContacted::localize_shared_script();
 		wp_localize_script( self::$class_id, self::$class_id, array(
 		) );
@@ -59,6 +66,7 @@ class c2c_LastContactedAdmin {
 		wp_register_style( 'jquery-ui-theme',           c2c_LastContacted::get_css_url( 'jquery.ui.theme.css' ) );
 		wp_register_style( 'c2c-last-contacted-shared', c2c_LastContacted::get_css_url( 'common.css' ) );
 		wp_register_style( self::$class_id,             c2c_LastContacted::get_css_url( 'admin.css' ) );
+		wp_register_style( self::$class_id . '_general', c2c_LastContacted::get_css_url( 'general.css' ) );
 	}
 
 	/**
@@ -69,6 +77,15 @@ class c2c_LastContactedAdmin {
 		wp_enqueue_style( 'jquery-ui-theme' );
 		wp_enqueue_style( 'c2c-last-contacted-shared' );
 		wp_enqueue_style( self::$class_id );
+	}
+
+	/**
+	 * Enqueues general stylesheets.
+	 *
+	 * @since 0.9.13
+	 */
+	public static function enqueue_general_css() {
+		wp_enqueue_style( self::$class_id  . '_general' );
 	}
 
 	/**

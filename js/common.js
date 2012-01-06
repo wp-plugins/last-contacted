@@ -157,7 +157,7 @@ jQuery(document).ready(function($) {
 					var old_date = lc_latest_contact_date_for_contact($(this_contact+':first'));
 					if ( old_date == '' || new_date >= old_date ) { // update contact info; resort contact. maybe resort group
 						// Update contact header
-						$(this_contact).find('h5 a').html($response.find('h5 a').html());
+						$(this_contact).find('h5').html($response.find('h5').html());
 						// Update contact details
 						$(this_contact).find('.lc_details_info').html($response.find('.lc_details_info').html());
 						// Potentially resort the contact
@@ -174,12 +174,13 @@ jQuery(document).ready(function($) {
 				}
 
 				// Reset the contact form fields
-//			contact.find('.lc_reset_contact_form').click();
 				lc_reset_contact_form(contact);
 
 
 				// Hide the contact form (presume if contact was just contacted, user won't be noting another contacted-at)
-//				contact.find('.lc_toggle_contact_form').click();
+				contact.find('.lc_new_contact').hide();
+				contact.find('.lc_show_contact_form').show();
+
 				// Scroll to ensure the potentially moved contact is still visible in the view port
 				group.find('.lc_contacts').scrollTo(contact, 500, {
 					onAfter: function() {
@@ -193,18 +194,6 @@ jQuery(document).ready(function($) {
 		});
 		return false;
 	} );
-
-	//
-	// Toggle display of new contacted form
-	//
-	$( '.lc_toggle_contact_form' ).click(function() {
-		$(this).find('span').toggle();
-		var form = $(this).parent().find('.lc_new_contact_form');
-		// Handle display/hiding of form
-//		form.slideToggle('fast');
-		form.toggle();
-		return false;
-	});
 
 	// Hide/show a group
 	$( '.lc_hide_group, .lc_show_group' ).submit(function() {
@@ -237,6 +226,30 @@ jQuery(document).ready(function($) {
 		});
 		return false;
 	});
+
+
+	//
+	// Show new contact form via hover link
+	//
+	$('.lc_show_contact_form a').mouseenter(function() {
+		$(this).parent().siblings('.lc_new_contact').show().find('.lc_content');
+		$(this).parent().hide();
+	});
+
+	//
+	// Hide display of new contacted form when link clicked
+	//
+	$( '.lc_hide_contact_form' ).click(function() {
+		$(this).closest('.lc_new_contact').hide().siblings('.lc_show_contact_form').show();
+		return false;
+	});
+
+	//
+	// Toggle display of hide contact button
+	//
+	$('.lc_details_info h6').hover(function(){
+		$(this).find('.lc_hide_contact').toggle();
+	})
 
 	$( '.js h5' ).show(); // Show things that were hidden via CSS to prevent flash of unstyled content
 

@@ -68,9 +68,13 @@ h5.ui-state-default > a:hover {
 	
 }
 .last_contact {
-	float:right;
+	float:none;
 	color:#888;
+	position:absolute;
+	top:4px;
+	right:6px;
 	padding-right:22px;
+	line-height:1.55em;
 }
 .last_contact img {
 	vertical-align:top;
@@ -201,17 +205,13 @@ h5.ui-state-active > a > span {
 }
 .lc_new_contact {
 	float:left;
-	margin:0;
+	margin:14px 0 0;
 	padding:0;
 	border-top:1px solid #bbb;
 	vertical-align:middle;
 	line-height:2em;
 	margin-right:1em;
 	width:100%;
-}
-.lc_toggle_contact_form {
-	float:right;
-	display:none;
 }
 #last_contacted .lc_details .lc_contact_methods a {
 	line-height:1em;
@@ -277,7 +277,7 @@ h5.ui-state-active > a > span {
 	margin:0 0 1em 4em;
 }
 .lc_details_info {
-	padding-bottom:20px;
+	padding-bottom:0;
 }
 .lc_last_contacted_info {
 	padding-top:10px;
@@ -287,12 +287,6 @@ h5.ui-state-active > a > span {
 	float:right;
 	font-size:10px;
 }
-.lc_hide_contact, .lc_show_contact {
-	float:left;
-	clear:left;
-	margin-top:4px;
-	margin-left:4px;
-}
 input.lc-hide-contact-button {
 	padding-top:0;
 	padding-bottom:0;
@@ -301,6 +295,9 @@ input.lc-hide-contact-button {
 
 .lc_contact {
 	margin-bottom:6px;
+}
+.lc_contact h5 {
+	position:relative;
 }
 .lc_contact h5 .avatar, .lc_contact h5 .no-avatar {
 	vertical-align:middle;
@@ -314,7 +311,6 @@ input.lc-hide-contact-button {
 	display:none;
 }
 .lc_contact h5 a {
-	display:block;
 	padding-right:4px;
 	padding-left:4px;
 }
@@ -339,4 +335,38 @@ input.lc-hide-contact-button {
 .lc_contact_source_info {
 	color:#999;
 	padding-left:1em;
+}
+.lc_show_contact_form {
+	text-align:center;
+	margin-top:4px;
+}
+.lc_show_contact_form a {
+	text-align:center;
+	padding:0 40px;
+	text-decoration:none !important;
+}
+#last_contacted .lc_details a.lc_hide_contact_form {
+	text-decoration:none;
+	position:absolute;
+	top:0;
+	right:5px;
+}
+.lc_new_contact {
+	position:relative;
+}
+.lc_hide_contact, .lc_show_contact {
+	float:none;
+	position:absolute;
+	top:4px;
+	right:10px;
+}
+.lc_hide_contact {
+	display:none;
+}
+h6 input.lc-hide-contact-button {
+	font-size:8px !important;
+}
+.lc_no_group_contacts_list {
+	margin-top:14px;
+	text-align:center;
 }

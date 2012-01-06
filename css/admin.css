@@ -20,15 +20,15 @@
 	color:blue;
 }
 .lc_contacts {
-	width:292px;
-	max-width:292px;
+	width:300px;
+	max-width:300px;
 	margin-left:4px;
 	height:300px;
 	max-height:300px;
 	overflow:auto;
 	border:1px solid lightGrey;
 	border-top:0;
-	padding:0 4px 6px;
+	padding:0 0 6px;
 }
 .lc_details {
 	display:none;
@@ -39,6 +39,7 @@
 	-moz-box-shadow: 1px 1px 6px rgba(0,0,0,0.7);
 	-webkit-box-shadow: 2px 2px 8px rgba(0,0,0,0.7);
 	box-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+	min-width:266px;
 }
 .lc_avatar {
 	position:absolute;
@@ -72,7 +73,11 @@
 	margin:0;
 }
 .last_contact {
-	margin-top:3px;
+	margin-top:0;
+	float:none;
+	position:absolute;
+	top:4px;
+	right:-79px;
 }
 .ui-state-default {
 	border:0;
@@ -93,4 +98,7 @@
 }
 .lc_new_contact {
 	padding:0 0 10px;
+}
+.lc_group_contacts_list {
+	margin-right:84px;
 }

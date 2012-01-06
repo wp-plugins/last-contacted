@@ -7,28 +7,30 @@
 	<h5>
 		<a href="">
 		<?php echo str_replace( array( "'48'", '-48 ' ), array( "'26'", '-26 ' ), $avatar ); ?>
-		<?php the_title(); ?><?php lc_last_contacted(); ?></a>
+		<?php the_title(); ?>
+		</a>
+		<?php lc_last_contacted(); ?>
 	</h5>
 	<div class="lc_details_<?php the_ID(); ?> lc_details ui-accordian">
 		<?php if ( ! empty( $avatar ) ) { ?>
 		<div class="lc_avatar">
 			<?php echo $avatar; ?>
-			<?php lc_hide_contact( get_the_ID() ); ?>
 		</div>
 		<?php } ?>
 		<div class="lc_details_main">
 			<div class="lc_details_info">
-				<h6><?php the_title(); ?></h6>
+				<h6><?php the_title(); ?><?php lc_hide_contact( get_the_ID() ); ?></h6>
 				<?php lc_email( '<div>Email: ', '</div>' ); ?>
 				<?php lc_phone( '<div>Phone: ', '</div>' ); ?>
 
 				<?php lc_last_contacted_full(); ?>
 			</div>
 
+			<div class="lc_show_contact_form"><a href="#">&#x25bc;</a></div>
+
 			<?php $path = plugins_url( 'css/images/', dirname ( __FILE__ ) ); ?>
-			<div class="lc_new_contact">
-				<?php /* TODO: Remove the next link. */ ?>
-				<a href="" class="lc_toggle_contact_form"><span style="display:none;">Newly contacted?</span><span>Hide form</span></a>
+			<div class="lc_new_contact" style="display:none;">
+				<a href="#" class="lc_hide_contact_form" title="Hide the contact form">&#x2716;</a>
 				<div class="ajax_response"></div>
 				<form class="lc_new_contact_form" method="post">
 						<input type="hidden" name="action" value="lc_save_note" />
