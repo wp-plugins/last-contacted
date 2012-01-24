@@ -1,0 +1,29 @@
+.js #last_contacted, .js h5 {
+	display:none;
+}
+.ui-accordion .ui-accordion-content {
+	padding-top:0;
+}
+.ui-accordion-icons h5.ui-accordion-header a {
+	padding-bottom:0;
+	padding-top:0;
+}
+#last_contacted h5 {
+	font-size:0.8em;
+}
+.lc_contact .lc_details {
+	padding-top:10px;
+}
+.lc_details_main h6 {
+	display:none;
+}
+.ui-state-active img {
+	display:none;
+}
+#last_contacted .lc_contact .ui-state-active {
+	font-size: 1em;
+	padding: 2px 0;
+}
+#ui-datepicker-div {
+	display:none;
+}

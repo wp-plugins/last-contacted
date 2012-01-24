@@ -1,0 +1,21 @@
+#toplevel_page_c2c_LastContactedAdmin img {
+	display:none;
+}
+#toplevel_page_c2c_LastContactedAdmin .wp-menu-image {
+	background: url('images/menu.png') no-repeat 7px -19px !important;
+}
+#toplevel_page_c2c_LastContactedAdmin:hover .wp-menu-image, #toplevel_page_c2c_LastContactedAdmin.wp-has-current-submenu .wp-menu-image {
+	background-position:7px 5px !important;
+}
+#menu-posts-c2c_last_contacted .wp-menu-image {
+	background: url('images/card-address.png') no-repeat 6px -17px !important;
+}
+#menu-posts-c2c_last_contacted:hover .wp-menu-image, #menu-posts-c2c_last_contacted.wp-has-current-submenu .wp-menu-image {
+	background-position:6px 7px !important;
+}
+#menu-posts-c2c_contact_group .wp-menu-image {
+	background: url('images/cards-address.png') no-repeat 6px -17px !important;
+}
+#menu-posts-c2c_contact_group:hover .wp-menu-image, #menu-posts-c2c_contact_group.wp-has-current-submenu .wp-menu-image {
+	background-position:6px 7px !important;
+}

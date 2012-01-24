@@ -1,0 +1,427 @@
+.ui-accordion .ui-accordion-content {
+	padding-left:1em;
+	padding-right:1em;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+	border-bottom: 2px dashed #aaa;
+}
+.ui-widget-content,
+.ui-state-default, .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus.
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default,
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+	background-image:none !important;
+}
+.ui-widget-content {
+	color:#444;
+	font-size:12px;
+}
+.ui-accordian {
+	width:auto;
+	margin-top:0;
+}
+#dashboard-widgets h4.ui-state-active {
+	font-weight:bold;
+	font-size:1.1em;
+}
+#dashboard_last_contacted {
+}
+#last_contacted h4, .abc h5 {
+/*	border:1px solid lightgray;
+	background-color:#e6e6e6;
+	color:#555;
+*/
+	margin-bottom:0;
+}
+#last_contacted h5 {
+	margin:0;
+}
+.abc h5 {
+	line-height:1.7em;
+}
+.abc h5 span.ui-icon {
+	display:none;
+}
+.abc {
+	width:initial;
+}
+.ui-accordion-icons h5.ui-accordion-header a {
+	padding-left:0.5em;
+}
+h5.ui-state-default, h5.ui-widget-content h5.ui-state-default, h5.ui-widget-header h5.ui-state-default {
+	background-color:#fff !important;
+	border:none !important;
+}
+h5.ui-state-default {
+	border-color:transparent;
+}
+h5.ui-state-default > a:hover {
+	border-color:#ddd;
+	background-color:#ddd;
+}
+/*
+#last_contacted li {
+	margin-left:0;
+	margin:0;
+}
+*/
+.lc_contact {
+	
+}
+.last_contact {
+	float:none;
+	color:#888;
+	position:absolute;
+	top:4px;
+	right:6px;
+	padding-right:22px;
+	line-height:1.61em;
+}
+.last_contact img {
+	vertical-align:top;
+	margin-right:10px;
+}
+ul.lc_contacts {
+	margin-bottom:20px;
+}
+/*
+ul.lc_contacts > li > a {
+	display:block;
+	padding:3px 0;
+}
+*/
+.lc_details {
+	margin:0 0 20px 0;
+	padding:6px 0 20px;
+
+	border:1px solid #aaa;
+	border-top:0;
+
+	background-color:#efefef;
+	-moz-border-radius-bottom: 4px/*{cornerRadius}*/;
+	-webkit-border-bottom-radius: 4px/*{cornerRadius}*/;
+	-khtml-border-bottom-radius: 4px/*{cornerRadius}*/;
+	border-bottom-radius: 4px/*{cornerRadius}*/;
+
+	position:relative;
+	overflow:hidden;
+	z-index:100;
+}
+.lc_details_main {
+	margin-left:60px;
+}
+.lc_details a, .lc_details a:visited {
+	color:blue;
+}
+.lc_disabled {
+	color:#999;
+}
+#last_contacted .lc_details .lc_contact_methods a:hover {
+	border-color:#fc0;
+	background-color:#fc0;
+}
+.lc_email {
+	background:transparent url('images/sprite.png') no-repeat center -16px;
+}
+.lc_phone {
+	background:transparent url('images/sprite.png') no-repeat center -32px;
+}
+.lc_person {
+	background:transparent url('images/sprite.png') no-repeat center -48px;
+}
+.lc_im {
+	background:transparent url('images/sprite.png') no-repeat center 0;
+}
+/* It'd be nice to simply do: .lc_contact h5 .last_contact { background-position:center; }
+   But that isn't supported in all browsers :( */
+.lc_contact h5 .lc_email  { background-position: right -16px; }
+.lc_contact h5 .lc_phone  { background-position: right -32px; }
+.lc_contact h5 .lc_person { background-position: right -48px; }
+.lc_contact h5 .lc_im     { background-position: right 0; }
+
+/*
+.lc_contacts > li > a:hover {
+	background-color:#eee;
+}
+.lc_active > a {
+	border:1px dotted #999;
+	padding:6px 4px;
+	margin-bottom:0;
+}
+*/
+
+.lc_details input[type='text'] {
+	border:1px solid #ccc;
+}
+img.ui-datepicker-trigger {
+	vertical-align:middle;
+	padding-top:4px;
+	float:left;
+}
+h5.ui-state-active > a {
+	padding-left:0.6em;
+}
+h5.ui-state-active > a {
+	font-size:125%;
+	font-weight:bold;
+	color:#000;
+}
+.lc_contact h5.ui-state-active, .lc_contact h5.ui-state-active > span {
+	background-color:#efefef;
+}
+h5.ui-state-active > a > span {
+	color:#000;
+}
+.lc_details .avatar {
+	float:left;
+	border:1px solid #999;
+	padding:2px;
+}
+
+.datepicker {
+	border:0;
+	xbackground:transparent;
+}
+.lc_group_sort, .lc_group_last_contact {
+	font-size:10px;
+	xwidth:100%;
+	xtext-align:right;
+	float:right;
+	margin-top:5px;
+	margin-right:12px;
+}
+.lc_group_sort {
+}
+.lc_group_sort select {
+	border:0px solid #999;
+	font-size:10px;
+	margin:0;
+}
+
+.chosen_method {
+	background-color:yellow;
+	border-width:1px;
+	border-color:#aaa;
+	border-style:solid;
+}
+.lc_new_contact {
+	float:left;
+	margin:14px 0 0;
+	padding:0;
+	border-top:1px solid #bbb;
+	vertical-align:middle;
+	line-height:2em;
+	margin-right:1em;
+	width:100%;
+}
+#last_contacted .lc_details .lc_contact_methods a {
+	line-height:1em;
+	padding:8px;
+	border:6px solid #eee;
+	vertical-align:middle;
+	float:left;
+	text-decoration:none;
+}
+#last_contacted .lc_details .lc_contact_methods a.chosen_method {
+	border-color:#fc0;
+	background-color:#fc0;
+}
+#last_contacted .lc_details .lc_contact_methods a:hover {
+	border-color:#bbb;
+	background-color:#bbb;
+}
+.lc_details label {
+	width:20px;
+}
+.lc_new_contact_form {
+	margin-top:10px;
+	/*display:none; /* TODO: hide via JS instead */
+}
+.ajax_response {
+	display:none;
+}
+.info, .success, .warning, .error, .validation {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding:6px 4px;
+}
+.info {
+    color: #00529B;
+    background-color: #BDE5F8;
+}
+.success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+.warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+.lc_new_contact_form label {
+	float:left;
+	width:4em;
+	clear:both;
+}
+.lc_content {
+	outline:none;
+	width:99%;
+	border-color:#ccc;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+}
+#dashboard_last_contacted .textarea_wrap {
+	margin:0 0 1em 4em;
+}
+.lc_details_info {
+	padding-bottom:0;
+}
+.lc_last_contacted_info {
+	padding-top:10px;
+}
+.lc_group .lc_hide_group, .lc_group .lc_show_group {
+	color:blue;
+	float:right;
+	font-size:10px;
+}
+input.lc-hide-contact-button {
+	padding-top:0;
+	padding-bottom:0;
+}
+
+
+.lc_contact {
+	margin-bottom:6px;
+}
+.lc_contact h5 {
+	position:relative;
+}
+.lc_contact h5 .avatar, .lc_contact h5 .no-avatar {
+	vertical-align:middle;
+	border:1px solid lightGray;
+	margin-right:2px;
+}
+.lc_contact h5 .no-avatar {
+	border-color:#fff;
+}
+.lc_contact h5 .no-avatars {
+	display:none;
+}
+.lc_contact h5 a {
+	padding-right:4px;
+	padding-left:4px;
+}
+#last_contacted h6 {
+	font-size:1.2em;
+	margin:0 0 6px;
+	border-bottom:1px solid #bbb;
+}
+.lc_group_info {
+	background-color:#f6f6f6;
+	color:#666;
+	margin-bottom: 6px;
+	font-size:0.8em;
+	font-style:italic;
+	border-bottom:1px solid #e6e6e6;
+	padding:4px 2px 8px;
+}
+.lc_group_info .button-secondary {
+	padding:0 8px;
+	color:#666;
+}
+.lc_contact_source_info {
+	color:#999;
+	padding-left:1em;
+}
+.lc_show_contact_form {
+	text-align:center;
+	margin-top:4px;
+}
+.lc_show_contact_form a {
+	text-align:center;
+	padding:0 40px;
+	text-decoration:none !important;
+}
+#last_contacted .lc_details a.lc_hide_contact_form {
+	text-decoration:none;
+	position:absolute;
+	top:0;
+	right:5px;
+}
+.lc_new_contact {
+	position:relative;
+}
+.lc_hide_contact, .lc_show_contact {
+	float:none;
+	position:absolute;
+	top:4px;
+	right:10px;
+}
+.lc_hide_contact {
+	display:none;
+}
+h6 input.lc-hide-contact-button {
+	font-size:8px !important;
+}
+.lc_no_group_contacts_list {
+	margin-top:14px;
+	text-align:center;
+}
+
+
+#last_contacted #lc_search h4 {
+	background-color:#b6b6b6;
+	border-color:#999;
+	text-align:center;
+}
+#lc_search .lc_group_info {
+	text-align:center;
+}
+#lc_search .lc_group_info ul {
+	text-align:left;
+}
+#lc_search .lc_contacts {
+	border-color:#999;
+}
+#lc_search .lc_contact_search {
+	margin-top:4px;
+}
+#lc_search .lc_contact_search_name {
+	width:200px;
+}
+#lc_search input[type="text"].ajax-loading {
+	background: transparent url('images/loading.gif') no-repeat right center;
+	visibility: visible;
+}
+#lc_search_notes {
+	margin:0 4px 0 12px;
+}
+#lc_clear_found {
+	position:relative;
+}
+#lc_clear_found input[type="submit"] {
+	font-size:11px !important;
+	font-weight:normal;
+	padding:1px 4px;
+	position:absolute;
+	right:-80px;
+}
+.lc-hide-if-no-multi-contact, .lc-hide-if-no-contact {
+	display:none;
+}
+.lc-remove-search-contact {
+	padding:0 0 0 4px;
+}
+.lc-remove-search-contact:hover {
+	cursor:pointer;
+}
+.lc-highlight {
+	background-color:#ffffc1;
+}
+#lc_contact_multi {
+	border-bottom:1px solid #ddd;
+	padding-bottom:6px;
+}
