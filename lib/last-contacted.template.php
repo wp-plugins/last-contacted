@@ -15,23 +15,30 @@ function lc_phone( $before = '', $after = '', $contact_id = null ) {
 		echo $before . $phone. $after;
 }
 
+// Always output the tag so that it can be replaced later
 function lc_last_contacted( $contact = null ) {
 	if ( is_null( $contact ) ) {
 		global $post;
 		$contact = $post;
 	}
-	$date = mysql2date( c2c_LastContacted::$date_format, $contact->comment_date );
 
 	$latest_contact = c2c_LastContacted::get_latest_note( $contact );
-	if ( empty( $latest_contact ) )
-		return;
 
-	$method = $Method = str_replace( 'lc_', '', $latest_contact->comment_type );
-	if ( empty( $method ) ) {
-		$method = 'im';
-		$Method = 'IM';
+	if ( empty( $latest_contact ) ) {
+//		return;
+		$date = '';
+		$method = $Methos = 'none';
+		$title = '';
+	} else {
+		$date = mysql2date( c2c_LastContacted::$date_format, $contact->comment_date );
+		$method = $Method = str_replace( 'lc_', '', $latest_contact->comment_type );
+		if ( empty( $method ) ) {
+			$method = 'im';
+			$Method = 'IM';
+		}
+		$title = "Last contacted via $Method on $date";
 	}
-	echo "<span class='last_contact lc_$method' title='Last contacted via $Method on $date'>$date</span>";
+	echo "<span class='last_contact lc_$method' title='$title'>$date</span>";
 }
 
 function lc_last_contacted_full( $contact = null ) {
@@ -41,23 +48,25 @@ function lc_last_contacted_full( $contact = null ) {
 	}
 
 	$date = mysql2date( c2c_LastContacted::$date_format, $contact->comment_date );
-	$method = 'IM';
 
 	$latest_contact = c2c_LastContacted::get_latest_note( $contact );
-	if ( empty( $latest_contact ) )
-		return;
 
-	$method = $Method = str_replace( 'lc_', '', $latest_contact->comment_type );
-	if ( empty( $method ) ) {
-		$method = 'im';
-		$Method = 'IM';
-	}
 	echo '<div class="lc_last_contacted_info">';
-	echo "Last contacted via <strong>$Method</strong> on <strong>$date</strong>.<br />";
-	if ( ! empty( $latest_contact->comment_content ) ) {
-		echo "Note: ";
-		echo '<em>' . esc_html( $latest_contact->comment_content ) . '</em>';
+
+	if ( ! empty( $latest_contact ) ) {
+		$method = $Method = str_replace( 'lc_', '', $latest_contact->comment_type );
+		if ( empty( $method ) ) {
+			$method = 'im';
+			$Method = 'IM';
+		}
+
+		echo "Last contacted via <strong>$Method</strong> on <strong>$date</strong>.<br />";
+		if ( ! empty( $latest_contact->comment_content ) ) {
+			echo "Note: ";
+			echo '<em>' . esc_html( $latest_contact->comment_content ) . '</em>';
+		}
 	}
+
 	echo '</div>';
 }
 
@@ -100,7 +109,7 @@ function lc_hide_group( $id ) {
 function lc_get_avatar( $size = '48', $args = array() ) {
 	global $post;
 	$defaults = array(
-		'contact_id'        => is_object( $post ) ? get_the_ID() : null,
+		'contact_id'        => isset( $args['contact_id'] ) ? $args['contact_id'] : (is_object( $post ) ? get_the_ID() : null),
 		'generic_image'     => plugins_url( 'css/images/transparent.png', dirname( __FILE__ ) ),
 		'return_as_html'    => true,
 		'use_gravatar'      => true,

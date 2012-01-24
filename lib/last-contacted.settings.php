@@ -146,7 +146,7 @@ class c2c_LastContactedSettings {
 	}
 
 	/**
-	 * A non-cron approach auto-updating contact data.
+	 * A pseudo-cron approach to auto-updating contact data.
 	 *
 	 * May eventually use wp-cron.
 	 */

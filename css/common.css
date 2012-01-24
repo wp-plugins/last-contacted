@@ -74,7 +74,7 @@ h5.ui-state-default > a:hover {
 	top:4px;
 	right:6px;
 	padding-right:22px;
-	line-height:1.55em;
+	line-height:1.61em;
 }
 .last_contact img {
 	vertical-align:top;
@@ -301,7 +301,7 @@ input.lc-hide-contact-button {
 }
 .lc_contact h5 .avatar, .lc_contact h5 .no-avatar {
 	vertical-align:middle;
-	border:1px solid lightGrey;
+	border:1px solid lightGray;
 	margin-right:2px;
 }
 .lc_contact h5 .no-avatar {
@@ -369,4 +369,59 @@ h6 input.lc-hide-contact-button {
 .lc_no_group_contacts_list {
 	margin-top:14px;
 	text-align:center;
+}
+
+
+#last_contacted #lc_search h4 {
+	background-color:#b6b6b6;
+	border-color:#999;
+	text-align:center;
+}
+#lc_search .lc_group_info {
+	text-align:center;
+}
+#lc_search .lc_group_info ul {
+	text-align:left;
+}
+#lc_search .lc_contacts {
+	border-color:#999;
+}
+#lc_search .lc_contact_search {
+	margin-top:4px;
+}
+#lc_search .lc_contact_search_name {
+	width:200px;
+}
+#lc_search input[type="text"].ajax-loading {
+	background: transparent url('images/loading.gif') no-repeat right center;
+	visibility: visible;
+}
+#lc_search_notes {
+	margin:0 4px 0 12px;
+}
+#lc_clear_found {
+	position:relative;
+}
+#lc_clear_found input[type="submit"] {
+	font-size:11px !important;
+	font-weight:normal;
+	padding:1px 4px;
+	position:absolute;
+	right:-80px;
+}
+.lc-hide-if-no-multi-contact, .lc-hide-if-no-contact {
+	display:none;
+}
+.lc-remove-search-contact {
+	padding:0 0 0 4px;
+}
+.lc-remove-search-contact:hover {
+	cursor:pointer;
+}
+.lc-highlight {
+	background-color:#ffffc1;
+}
+#lc_contact_multi {
+	border-bottom:1px solid #ddd;
+	padding-bottom:6px;
 }

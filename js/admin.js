@@ -15,9 +15,7 @@ jQuery(document).ready(function($) {
 	//
 	// Give each contact a tooltip
 	//
-	$( '.lc_contact h5' )
-	.click( function() { return false; })
-	.tooltip({
+	tooltip_config = {
 		effect: 'toggle',
 		predelay: 250,
 		relative: true,
@@ -48,19 +46,24 @@ jQuery(document).ready(function($) {
 			if ( $( '.ui-datepicker-calendar').is(':visible') )
 				event.preventDefault();
 		}
-	});
+	};
+	$( '.lc_contact h5' )
+		.click( function() { return false; })
+		.tooltip(tooltip_config);
 
 	// Prevent contact popup from appearing if hovering over last contact date
-	$( '.lc_contact h5 span' ).mouseenter(function(){
+	$( '.lc_contact h5 span' ).live('mouseenter', function(){
 		$(this).parent().data('over-span',true);
-	}).mouseleave(function() {
+	}).live('mouseleave', function() {
 		$(this).parent().data('over-span',false);
 	});
 
 	//
 	// After submitting a note about newly contacting contact, hide the tooltip
 	//
-	$( '.lc_save_note' ).click(function() {
+	$( '.lc_save_note' ).live('click', function() {
 		$(this).closest('.lc_details').prev('h5').data('tooltip').hide();
 	});
+
+	$( '.lc_contact_search_name').focus();
 });

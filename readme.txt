@@ -4,8 +4,8 @@ Donate link: http://coffee2code.com/donate
 Tags: admin, dashboard, contacts, google, coffee2code
 Requires at least: 3.3
 Tested up to: 3.3.1
-Stable tag: 0.9.13
-Version: 0.9.13
+Stable tag: 0.9.14
+Version: 0.9.14
 
 Easily keep track of the last time you interacted with your contacts.
 
@@ -57,7 +57,34 @@ In the future, yes; an API will allow support for other contact services. At pre
 No. This plugin provides an interface for managing when you contacted your contacts. It does not provide a means for managing contacts themselves. By that I mean you can't add contacts, edit contact details, assign/deassign contacts to groups, etc with this plugin. Nothing you do ever gets pushed up to the contact service (i.e. Google Contacts). Use the contact service to manage your contacts.
 
 
+== Credits ==
+
+Thanks to (PC.DE)[http://pc.de/icons/] for the Berlin icons used by the plugin.
+
+Thanks to [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/), by way of [Randy Jensen](http://randyjensenonline.com/thoughts/wordpress-custom-post-type-fugue-icons/), for the Fugue icons used in the menus.
+
+
 == Changelog ==
+
+= 0.9.14 =
+* Add search box with autocomplete to find and highlight contact(s)
+    * Search box gets initial focus on page load
+    * Search is an AJAX-powered auto-complete for contact's full name (kicks in after 3 characters)
+    * Selected searched contact is added to search list and behaves as full instance of the contact
+    * Selected searched contact gets all of their instances within groups highlighted to stand out
+    * Multiple contacts can be searched and listed
+    * Selected searched contacts can be individually removed from search list, or removed en masse
+    * If there are multiple selected searched contacts, then multi-contact pseudo-contact appears,
+      which allows for making note of having contacted all of the listed search contacts using same
+      info
+	* (currently present but not functional in admin dashboard widget)
+* Significantly reduce the number of queries performed on page load
+* Prevent long notes from expanding width of contact's popup
+* Add support for 'fields' setting for group/contact queries and only SELECT those fields
+* Only COALESCE comments when explicitly configured to do so
+* Add custom icon for plugin's top-level menu link
+* Always enqueue general.css (now that plugin menu icon is used)
+* Fix bug with disappearing meta when hiding/unhiding contacts
 
 = 0.9.13 =
 * Shrink popup trigger zone so as not to encompass right 1/4 of group's contacts listing (facilitates scrolling)
@@ -214,7 +241,6 @@ No. This plugin provides an interface for managing when you contacted your conta
 
 = ENHANCEMENTS =
 * Prefix all CSS classes with "lc_"
-* Remove link for hiding contact form (unnecessary)
 * Summarize stats for each import (when manually performed) (i.e. X groups added/removed, X contacts added/removed)?
 * Expose date for when group/contact first got imported?
 * Expose name of contact source for each contact?

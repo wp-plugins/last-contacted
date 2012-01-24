@@ -24,3 +24,6 @@
 	font-size: 1em;
 	padding: 2px 0;
 }
+#ui-datepicker-div {
+	display:none;
+}

@@ -2,11 +2,11 @@
 /**
  * @package Last_Contacted
  * @author Scott Reilly
- * @version 0.9.13
+ * @version 0.9.14
  */
 /*
 Plugin Name: Last Contacted
-Version: 0.9.13
+Version: 0.9.14
 Plugin URI: http://coffee2code.com/wp-plugins/last-contacted/
 Author: Scott Reilly
 Author URI: http://coffee2code.com/
@@ -82,13 +82,16 @@ class c2c_LastContacted {
 	 */
 	public static $enable_admin_page  = true;
 
-	public static $public_post_types = true; // Currently only used to expose post types for debugging
+	private static $public_post_types = true; // Currently only used to expose post types for debugging
 
 	private static $widget_id  = 'c2c_LastContacted';
 
 	// For temporary data storage
 	private static $post_date_comparator = '';
 	private static $post_date = '';
+	private static $post_fields = '';
+	private static $posts_orderby = '';
+	private static $starts_with = '';
 
 	/**
 	 * Returns version for the plugin.
@@ -96,7 +99,7 @@ class c2c_LastContacted {
 	 * @since 0.9.8
 	 */
 	public static function version() {
-		return '0.9.13';
+		return '0.9.14';
 	}
 
 	/**
@@ -129,6 +132,7 @@ class c2c_LastContacted {
 		add_action( 'wp_ajax_lc_hide_group',   array( __CLASS__, 'ajax_hide_item' ) );
 		add_action( 'wp_ajax_lc_show_group',   array( __CLASS__, 'ajax_show_item' ) );
 		add_action( 'wp_ajax_lc_save_note',    array( __CLASS__, 'ajax_save_note' ) );
+		add_action( 'wp_ajax_lc_search_contacts', array( __CLASS__, 'ajax_search_contacts' ) );
 
 		// Only do these things on the dashboard page
 		add_action( 'load-index.php',          array( __CLASS__, 'on_load' ) );
@@ -410,7 +414,7 @@ public static function backdoor_delete() {
 		), ARRAY_N );
 		foreach ( $orphaned_groups as $orphan ) {
 			$count_contacts = count( self::get_contacts( $orphan->ID, array(
-				'fields'      => 'ids',
+				'fields'      => 'ID',
 				'post_status' => array( 'publish', 'draft', 'orphan' ),
 			), ARRAY_N ) );
 			// If group being orphaned has no contacts, then it can be deleted
@@ -554,7 +558,8 @@ HTML;
 	 * Only used if the self::$$public_post_types setting is true (i.e. debugging purposes)
 	 */
 	public static function save_meta( $post_id, $post ) {
-		if ( 'revision' == $post->post_type )
+//		if ( 'revision' == $post->post_type )
+		if ( wp_is_post_revision( $post ) )
 			return;
         
 		//TODO: Verify nonce
@@ -574,11 +579,10 @@ HTML;
 	 * AJAX handler for hiding a group or contact.
 	 */
 	public static function ajax_hide_item() {
+		global $wpdb;
 		$id = absint( $_POST['ID'] );
 		check_admin_referer( self::get_nonce( $_POST['action'], $id ) );
-
-		$post = array( 'ID' => $id, 'post_status' => 'draft' );
-		wp_update_post( $post );
+		$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $id ) );
 		exit('1');
 	}
 
@@ -586,11 +590,10 @@ HTML;
 	 * AJAX handler for unhiding a group or contact.
 	 */
 	public static function ajax_show_item() {
+		global $wpdb;
 		$id = absint( $_POST['ID'] );
 		check_admin_referer( self::get_nonce( $_POST['action'], $id ) );
-
-		$post = array( 'ID' => $id, 'post_status' => 'publish' );
-		wp_update_post( $post );
+		$wpdb->update( $wpdb->posts, array( 'post_status' => 'publish' ), array( 'ID' => $id ) );
 		exit('1');
 	}
 
@@ -629,28 +632,67 @@ HTML;
 
 		// TODO: Handle if the user selects a future date
 
-		wp_insert_comment( array(
-			'comment_agent'        => substr($_SERVER['HTTP_USER_AGENT'], 0, 254 ),
-			'comment_author'       => $wpdb->escape( $user->display_name ),
-			'comment_author_email' => $wpdb->escape( $user->user_email ),
-			'comment_author_url'   => $wpdb->escape( $user->user_url ),
-			'comment_content'      => trim( $_POST['content'] ),
-			'comment_author_IP'    => preg_replace( '/[^0-9a-fA-F:., ]/', '',$_SERVER['REMOTE_ADDR'] ),
-			'comment_date'         => $date,
-			'comment_date_gmt'     => get_gmt_from_date( $date ),
-			'comment_post_ID'      => absint( $_POST['comment_post_ID'] ),
-			'comment_type'         => $comment_type,
-			'user_id'              => $user->ID
-		) );
+		$post_id = '';
+		$posts = 'multi' == $_POST['comment_post_ID'] ? $_POST['contact_ids'] : array( $_POST['comment_post_ID'] );
+		foreach ( $posts as $post_id ) {
+			$post_id = absint( $post_id );
+			wp_insert_comment( array(
+				'comment_agent'        => substr($_SERVER['HTTP_USER_AGENT'], 0, 254 ),
+				'comment_author'       => $wpdb->escape( $user->display_name ),
+				'comment_author_email' => $wpdb->escape( $user->user_email ),
+				'comment_author_url'   => $wpdb->escape( $user->user_url ),
+				'comment_content'      => trim( $_POST['content'] ),
+				'comment_author_IP'    => preg_replace( '/[^0-9a-fA-F:., ]/', '',$_SERVER['REMOTE_ADDR'] ),
+				'comment_date'         => $date,
+				'comment_date_gmt'     => get_gmt_from_date( $date ),
+				'comment_post_ID'      => $post_id,
+				'comment_type'         => $comment_type,
+				'user_id'              => $user->ID
+			) );
+		}
 
 		echo 'success|Saved!|';
-		echo self::show_contact( absint( $_POST['comment_post_ID'] ) );
+		echo implode( ',', $posts ) . '|';
+		// Even if multi-contact submission, just need to return info for one of the contacts
+		echo self::show_contact( absint( $post_id ) );
+		exit();
+	}
+
+	/**
+	 * AJAX handler for searching for contacts.
+	 *
+	 * @since 0.9.14
+	 */
+	public static function ajax_search_contacts() {
+		$search = $_REQUEST['term'];
+		$names = array();
+		$contacts = self::get_contacts( null, array(
+			'fields'         => array( 'ID', 'post_title' ),
+			'orderby'        => 'post_title',
+			'posts_per_page' => 25, // arbitrary limit
+			'starts_with'    => $search,
+		), ARRAY_N );
+		$return = array();
+		if ( empty( $contacts ) ) {
+			$return[] = '';
+		} else {
+			foreach ( $contacts as $contact ) {
+				$user          = array();
+				$user['label'] = $contact->post_title;
+				$user['id']    = $contact->ID;
+				$return[]      = $user;
+			}
+		}
+		echo json_encode( $return );
 		exit();
 	}
 
 	public static function coalesce_comments( $fields ) {
 		global $wpdb;
-		$fields .= ", COALESCE(
+		if ( $fields )
+			$fields .= ', ';
+
+		$fields .= "COALESCE(
 				(
 					SELECT MAX(comment_date)
 					FROM $wpdb->comments wpc
@@ -668,7 +710,7 @@ HTML;
 	 * @return string The modified orderby
 	 */
 	public static function orderby( $orderby ) {
-		$orderby = ' comment_date DESC, post_title ASC ';
+		$orderby = self::$posts_orderby ? self::$posts_orderby : ' post_title ASC ';
 		return $orderby;
 	}
 
@@ -739,30 +781,70 @@ HTML;
 	 * @return WP_Query The WP_Query object created to perform the query
 	 */
 	private static function do_query( $conditions, $coalesce_type = 'contact' ) {
-		$coalesce = 'coalesce_comments';
+		$do_where = false;
+
+		if ( ! isset( $conditions['coalesce_comments'] ) || ! $conditions['coalesce_comments'] )
+			$coalesce = '';
+		else
+			$coalesce = 'coalesce_comments';
+
+		$fields = '';
+		if ( isset( $conditions['fields'] ) && $conditions['fields'] ) {
+			global $wpdb;
+			if ( ! is_array( $conditions['fields'] ) )
+				$conditions['fields'] = explode( ' ', $conditions['fields'] );
+			foreach ( $conditions['fields'] as $field ) {
+				if ( $fields )
+					$fields .= ', ';
+				$fields .= $wpdb->posts . '.' . $field;
+			}
+		}
+
+		if ( isset( $conditions['starts_with'] ) && $conditions['starts_with'] ) {
+			self::$starts_with = $conditions['starts_with'];
+			$do_where = true;
+		}
+
 		$date_compare = isset( $conditions['post_modified'] ) && ! empty( $conditions['post_modified'] );
+
+		if ( $fields ) {
+			self::$post_fields = $fields;
+			add_filter( 'posts_fields',   array( __CLASS__, 'posts_select' ) );
+		}
 
 		if ( $coalesce ) {
 			add_filter( 'posts_fields',   array( __CLASS__, $coalesce ) );
-			add_filter( 'posts_orderby',  array( __CLASS__, 'orderby' ) );
+			self::$posts_orderby = ' comment_date DESC, post_title ASC ';
 		}
+
+		add_filter( 'posts_orderby',  array( __CLASS__, 'orderby' ) );
 
 		if ( $date_compare ) {
 			self::$post_date_comparator = ( isset( $conditions['post_date_comparator'] ) ? $conditions['post_date_comparator'] : '<' );
 			self::$post_date            = $conditions['post_modified'];
-			add_filter( 'posts_where',     array( __CLASS__, 'posts_where' ) );
+			$do_where = true;
 			unset( $conditions['post_modified'] );
 		}
 
+		if ( $do_where )
+			add_filter( 'posts_where',     array( __CLASS__, 'posts_where' ) );
+
 		$q = new WP_Query( $conditions );
 
-		if ( $date_compare ) {
+		if ( $do_where ) {
 			self::$post_date_comparator = '';
 			self::$post_date            = '';
+			self::$starts_with          = '';
 			remove_filter( 'posts_where',   array( __CLASS__, 'posts_where' ) );
 		}
 
+		if ( $fields ) {
+			self::$post_fields = '';
+			remove_filter( 'posts_fields',  array( __CLASS__, 'posts_select' ) );
+		}
+
 		if ( $coalesce ) {
+			self::$posts_orderby = '';
 			remove_filter( 'posts_fields',  array( __CLASS__, $coalesce ) );
 			remove_filter( 'posts_orderby', array( __CLASS__, 'orderby' ) );
 		}
@@ -771,7 +853,22 @@ HTML;
 	}
 
 	/**
-	 * Modifies query WHERE clause to do date comparison.
+	 * Modifies query SELECT fields.
+	 *
+	 * @since 0.9.14
+	 *
+	 * @param string $fields Fields string
+	 * @return string
+	 */
+	public static function posts_select( $fields ) {
+		if ( self::$post_fields )
+			$fields = self::$post_fields;
+
+		return $fields;
+	}
+
+	/**
+	 * Modifies query WHERE clause to do date and/or starts_with comparisons.
 	 *
 	 * @param string $where Existing WHERE clause
 	 * @return string Modified WHERE clause
@@ -779,6 +876,10 @@ HTML;
 	public static function posts_where( $where ) {
 		if ( ! empty( self::$post_date_comparator ) && ! empty( self::$post_date ) )
 			$where .= ' AND (post_modified ' . self::$post_date_comparator . ' \'' . self::$post_date . '\') ';
+
+		if ( ! empty( self::$starts_with ) )
+			$where .= ' AND (post_title LIKE \'' . esc_sql( self::$starts_with ) . '%\')';
+
 		return $where;
 	}
 
@@ -820,7 +921,7 @@ HTML;
 	 * @param int $group The group ID
 	 */
 	public static function show_contacts( $group ) {
-		$GLOBALS['lc_contacts_query'] = self::get_contacts( $group );
+		$GLOBALS['lc_contacts_query'] = self::get_contacts( $group, array( 'coalesce_comments' => true ) );
 		load_template( dirname( __FILE__ ) . '/templates/contacts.php', false );
 	}
 
@@ -832,7 +933,7 @@ HTML;
 	 */
 	public static function count_contacts( $group, $hidden = false ) {
 		return count( get_posts( array(
-			'fields'         => 'ids',
+			'fields'         => 'ID',
 			'post_status'    => array( $hidden ? 'draft' : 'publish' ),
 			'posts_per_page' => '-1',
 			'post_type'      => array( self::$contact_post_type ),
@@ -853,9 +954,9 @@ HTML;
 	public static function show_contact( $contact = null ) {
 		global $post;
 		if ( is_object( $contact ) ) {
-			$post = $object;
+			$post = $contact;
 		} elseif ( is_integer( $contact ) ) {
-			$c = self::get_contacts( '', array( 'p' => $contact, 'posts_per_page' => 1 ), ARRAY_N );
+			$c = self::get_contacts( '', array( 'p' => $contact, 'posts_per_page' => 1, 'coalesce_comments' => true ), ARRAY_N );
 			if ( empty( $c ) )
 				return;
 			$post = array_shift( $c );
@@ -871,7 +972,7 @@ HTML;
 	 * @return WP_Post The most recently contacted contact
 	 */
 	public static function get_latest_contact( $group ) {
-		$contacts = self::get_contacts( $group, array( 'posts_per_page' => 1 ), ARRAY_N );
+		$contacts = self::get_contacts( $group, array( 'posts_per_page' => 1, 'coalesce_comments' => true ), ARRAY_N );
 		if ( empty( $contacts ) )
 			return array();
 		$contact = array_shift( $contacts );
@@ -898,11 +999,26 @@ HTML;
 	 * @return object The comment object
 	 */
 	public static function get_latest_note( $contact ) {
-		if ( is_object( $contact ) )
+		if ( is_object( $contact ) ) {
+			if ( property_exists( $contact, 'comment_date' ) && empty( $contact->comment_date ) )
+				return;
 			$contact = $contact->ID;
+		}
+
+		$latest_note = wp_cache_get( $contact, 'lc_latest_note' );
+		if ( $latest_note ) {
+			if ( 'none' == $latest_note )
+				$latest_note = null;
+			return $latest_note;
+		}
+
 		$latest_note = get_comments( array('status' => 'approved', 'post_id' => $contact, 'number' => 1 ) );
 		if ( $latest_note )
 			$latest_note = array_shift( $latest_note );
+
+		$cache_note = $latest_note ? $latest_note : 'none'; // To avoid caching null/false
+		wp_cache_set( $contact, $cache_note, 'lc_latest_note' );
+
 		return $latest_note;
 	}
 

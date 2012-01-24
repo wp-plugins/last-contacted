@@ -25,8 +25,7 @@ class c2c_LastContactedAdmin {
 
 		// Register and enqueue global admin styles
 		add_action( 'admin_init',                          array( __CLASS__, 'register_styles' ) );
-		if ( c2c_LastContacted::$public_post_types )
-			add_action( 'admin_print_styles',              array( __CLASS__, 'enqueue_general_css' ) );
+		add_action( 'admin_print_styles',                  array( __CLASS__, 'enqueue_general_css' ) );
 
 		// Do plugin page specific things
 		$pages = apply_filters( 'last_contacted_admin_pages', array( __CLASS__, __CLASS__ . '_import' ) );
@@ -48,10 +47,11 @@ class c2c_LastContactedAdmin {
 //		wp_enqueue_script( 'jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js', array(), '1.8.16', true );
 		wp_enqueue_script( 'jquery-ui-core' );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'jquery-ui-autocomplete' );
 		wp_enqueue_script( 'jquery-effects-highlight' );
 		wp_enqueue_script( 'jquery-tooltip',    c2c_LastContacted::get_javascript_url( 'jquery.tools.min.js' ), array( 'jquery' ), '1.2.6', true );
 		wp_enqueue_script( 'jquery-scrollto',   c2c_LastContacted::get_javascript_url( 'jquery.scrollTo-min.js' ), array( 'jquery' ), '1.2.6', true );
-		wp_enqueue_script( 'c2c_LastContacted', c2c_LastContacted::get_javascript_url( 'common.js' ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker', 'jquery-effects-highlight' ), c2c_LastContacted::version(), true );
+		wp_enqueue_script( 'c2c_LastContacted', c2c_LastContacted::get_javascript_url( 'common.js' ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker', 'jquery-ui-autocomplete','jquery-effects-highlight' ), c2c_LastContacted::version(), true );
 		wp_enqueue_script( self::$class_id,     c2c_LastContacted::get_javascript_url( 'admin.js' ), array( 'jquery-tooltip', 'jquery-scrollto', 'c2c_LastContacted' ), c2c_LastContacted::version(), true );
 		c2c_LastContacted::localize_shared_script();
 		wp_localize_script( self::$class_id, self::$class_id, array(
@@ -154,7 +154,7 @@ class c2c_LastContactedAdmin {
 		$GLOBALS['lc_groups_query'] = c2c_LastContacted::get_groups( $conds );
 
 		load_template( c2c_LastContacted::get_template_path( '_flash.php' ) );
-		load_template( c2c_LastContacted::get_template_path( 'admin.php' ) );
+		load_template( c2c_LastContacted::get_template_path( 'groups.php' ) );
 	}
 
 	/**
@@ -217,17 +217,17 @@ class c2c_LastContactedAdmin {
 	public static function maybe_prefetch_gravatar() {
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'lc_import_gravatar' ) {
 			// Get list of all contact IDs
-			$post_ids = c2c_LastContacted::get_contacts( null, array(
-				'fields'      => 'ids',
+			$posts = c2c_LastContacted::get_contacts( null, array(
+				'fields'      => array( 'ID', 'post_type' ),
 				'post_status' => array( 'publish', 'draft' ),
 			), ARRAY_N );
 
 			$do_import = isset( $_POST['import_gravatar'] );
 
-			foreach ( $post_ids as $post_id ) {
-				delete_post_meta( $post_id, '_lc_no_gravatar' );
+			foreach ( $posts as $post ) {
+				delete_post_meta( $post->ID, '_lc_no_gravatar' );
 				if ( $do_import )
-					lc_get_avatar( '16', array( 'contact_id' => $post_id, 'return_as_html' => false, 'validate_gravatar' => true ) );
+					lc_get_avatar( '16', array( 'contact_id' => $post->ID, 'return_as_html' => false, 'validate_gravatar' => true ) );
 			}
 
 			if ( $do_import )
